@@ -26,7 +26,15 @@ class TaskController extends Controller
      */
     public function create(Request $request)
     {
-        $inputs=$request->all();
+
+        $request->validate([
+
+            'title' => 'required|string',
+            'description' => 'required|string',
+            'status'=>'required|in:open,close',
+
+        ]);
+        ($inputs=$request->all());
         $inputs['user_id']=auth()->user()->id;
         $task=Task::create($inputs);
         if($task){
@@ -44,6 +52,7 @@ class TaskController extends Controller
      */
     public function show($id)
     {
+
         $task=Task::where([
             ['user_id',auth()->user()->id],
             ['id',$id]
@@ -67,6 +76,13 @@ class TaskController extends Controller
      */
     public function update(Request $request, Task $task)
     {
+        $request->validate([
+
+            'title' => 'required|string',
+            'description' => 'required|string',
+            'status'=>'required|in:open,close',
+        ]);
+
         $task->update($request->all());
 
         if($task){

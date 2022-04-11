@@ -23,13 +23,13 @@ Route::post('/register',[UserController::class,'register']);
 Route::post('/login',[UserController::class,'login']);
 
 Route::middleware('auth:api')->group(function () {
-    Route::get('/create-task',[TaskController::class,'create']);
-    Route::get('/edit-task/{task}',[TaskController::class,'update']);
-    Route::get('/status-task/{task}',[TaskController::class,'status']);
-    Route::get('/all-task',[TaskController::class,'index']);
-    Route::get('/specify-task/{id}',[TaskController::class,'show']);
+    Route::post('/create-task',[TaskController::class,'create'])->name('task.create');
+    Route::put('/edit-task/{task}',[TaskController::class,'update'])->name('task.update');
+    Route::get('/status-task/{task}',[TaskController::class,'status'])->name('task.status');
+    Route::get('/all-task',[TaskController::class,'index'])->name('task.all');
+    Route::get('/specify-task/{id}',[TaskController::class,'show'])->name('task.show');
 
-    Route::get('/create-label/{task}',[LabelController::class,'create']);
+    Route::post('/create-label/{task}',[LabelController::class,'create']);
     Route::get('/all-label',[LabelController::class,'index']);
 });
 
