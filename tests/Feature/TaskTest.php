@@ -3,9 +3,14 @@
 namespace Tests\Feature;
 
 use App\Task;
+use Carbon\Carbon;
 use Tests\TestCase;
+use App\Mail\NotificationMail;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Mockery;
 
 class TaskTest extends TestCase
 {
@@ -63,10 +68,10 @@ class TaskTest extends TestCase
     public function update_task()
     {
         $user = $this->loginUser();
-        $currentData = factory(Task::class)->create([
+        ($currentData = factory(Task::class)->create([
             'user_id' => $user['id'],
-        ]);
-        $data = factory(Task::class)->make()->toArray();
+        ]));
+        ($data = factory(Task::class)->make()->toArray());
         $this->putJson(route('task.update', [
             'task' => $currentData['id']
         ]), $data)->assertOk();
@@ -87,8 +92,14 @@ class TaskTest extends TestCase
 
     /** @test */
     public function change_task_status_to_close(){
-        $this->loginUser();
+
+
+        $user=$this->loginUser();
         $task=Task::inRandomOrder()->first();
+        Mail::fake();
+        Mail::to($user['email'])->send(new NotificationMail(['task' => $task->id],['status'=>'close'],['dateTime'=>Carbon::now()]));
+        Mail::assertSent(NotificationMail::class);
+
         $this->putJson(route('task.status',$task->id),['status'=>'close'])->assertStatus(200);
     }
 
