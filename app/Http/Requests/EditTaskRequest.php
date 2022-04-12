@@ -24,8 +24,9 @@ class EditTaskRequest extends FormRequest
     public function rules()
     {
         return [
-            'title' =>'required|min:5|max:50',
+            'title' =>'required|min:2|max:50',
             'description' =>'required|min:5|max:1000',
+            'status' =>'required|in:open,close',
         ];
     }
 }
