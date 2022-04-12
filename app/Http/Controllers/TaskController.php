@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CreateTaskRequest;
+use App\Http\Requests\EditTaskRequest;
 use App\Http\Requests\TaskRequest;
+use App\Http\Requests\TaskStatusRequest;
 use App\Http\Resources\Task as ResourcesTask;
 use App\Mail\NotificationMail;
 use App\Task;
@@ -14,8 +17,9 @@ use Illuminate\Support\Facades\Mail;
 class TaskController extends Controller
 {
 
-    public function index(){
-        $tasks=Task::has('labels')->with('labels')->get();
+    public function index()
+    {
+        $tasks = Task::has('labels')->with('labels')->get();
         return ResourcesTask::collection($tasks);
     }
 
@@ -24,23 +28,21 @@ class TaskController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create(Request $request)
+    public function create(CreateTaskRequest $request)
     {
 
-        $request->validate([
-
-            'title' => 'required|string',
-            'description' => 'required|string',
-            'status'=>'required|in:open,close',
-
-        ]);
-        ($inputs=$request->all());
-        $inputs['user_id']=auth()->user()->id;
-        $task=Task::create($inputs);
-        if($task){
-            return response()->json(['status'=>'success','message'=>'task created Sucessfully','data'=>$task]);
-        }else{
-            return response()->json(['status'=>'error','message'=>'error occurred in create task. please try again']);
+        // $request->validate([
+        //     'title' => 'required|string',
+        //     'description' => 'required|string',
+        //     'status' => 'required|in:open,close',
+        // ]);
+        ($inputs = $request->all());
+        $inputs['user_id'] = auth()->user()->id;
+        $task = Task::create($inputs);
+        if ($task) {
+            return response()->json(['status' => 'success', 'message' => 'task created Sucessfully', 'data' => $task]);
+        } else {
+            return response()->json(['status' => 'error', 'message' => 'error occurred in create task. please try again']);
         }
     }
 
@@ -52,18 +54,16 @@ class TaskController extends Controller
      */
     public function show($id)
     {
-
-        $task=Task::where([
-            ['user_id',auth()->user()->id],
-            ['id',$id]
+        $task = Task::where([
+            ['user_id', auth()->user()->id],
+            ['id', $id]
         ])->first();
 
-        if($task){
-            return response()->json(['status'=>'success','data'=>$task]);
-        }else{
-            return response()->json(['status'=>'error','message'=>'not found task']);
+        if ($task) {
+            return response()->json(['status' => 'success', 'data' => $task]);
+        } else {
+            return response()->json(['status' => 'error', 'message' => 'not found task']);
         }
-
     }
 
 
@@ -74,46 +74,44 @@ class TaskController extends Controller
      * @param  \App\Task  $task
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Task $task)
+    public function update(EditTaskRequest $request, Task $task)
     {
-        $request->validate([
+        // $request->validate([
 
-            'title' => 'required|string',
-            'description' => 'required|string',
-            'status'=>'required|in:open,close',
-        ]);
+        //     'title' => 'required|string',
+        //     'description' => 'required|string',
+        //     'status' => 'required|in:open,close',
+        // ]);
 
         $task->update($request->all());
 
-        if($task){
-            return response()->json(['status'=>'success','message'=>'task updated Sucessfully','task'=>$task]);
-        }else{
-            return response()->json(['status'=>'error','message'=>'error occurred in update task. please try again']);
+        if ($task) {
+            return response()->json(['status' => 'success', 'message' => 'task updated Sucessfully', 'task' => $task]);
+        } else {
+            return response()->json(['status' => 'error', 'message' => 'error occurred in update task. please try again']);
         }
     }
 
-    public function status(Request $request, Task $task)
+    public function status(TaskStatusRequest $request, Task $task)
     {
-        //dd($request->user()->email);
-        $result=DB::transaction(function () use ($request,$task) {
-            //$task->update(['status',$request->status]);
+        $result = DB::transaction(function () use ($request, $task) {
             $task->status = $request->status;
             $task->save();
 
-            $dateTime=date('Y-m-d H:i:s');
+            $dateTime = date('Y-m-d H:i:s');
 
-            if($task->status=="close"){
+            if ($task->status == "close") {
                 Log::info("task with  id=$task->id change status to $request->status on date tiem $dateTime.");
-                Mail::to($request->user()->email)->send(new NotificationMail($task->id,$request->status,$dateTime));
+                Mail::to($request->user()->email)->send(new NotificationMail($task->id, $request->status, $dateTime));
             }
 
             return true;
         });
 
-        if($task){
-            return response()->json(['status'=>'success','message'=>'task status updated Sucessfully','task'=>$task]);
-        }else{
-            return response()->json(['status'=>'error','message'=>'error occurred in update task status. please try again']);
+        if ($task) {
+            return response()->json(['status' => 'success', 'message' => 'task status updated Sucessfully', 'task' => $task]);
+        } else {
+            return response()->json(['status' => 'error', 'message' => 'error occurred in update task status. please try again']);
         }
     }
 }

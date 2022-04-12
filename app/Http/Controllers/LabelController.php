@@ -12,10 +12,10 @@ use Illuminate\Support\Facades\DB;
 class LabelController extends Controller
 {
 
-    public function index(){
-
-        $labels=Label::with('task')->whereHas('task',function($q){
-            return $q->where('user_id',auth()->user()->id);
+    public function index()
+    {
+        $labels = Label::with('task')->whereHas('task', function ($q) {
+            return $q->where('user_id', auth()->user()->id);
         })->get();
 
         return LabelResource::collection($labels);
@@ -23,15 +23,14 @@ class LabelController extends Controller
 
     public function create(LabelRequest $request, Task $task)
     {
-        $inputs=$request->all();
-        $inputs['task_id']=$task->id;
-        $label=Label::create($inputs);
+        $inputs = $request->all();
+        $inputs['task_id'] = $task->id;
+        $label = Label::create($inputs);
 
-        if($label){
-            return response()->json(['status'=>'success','message'=>'label created Sucessfully','data'=>$label]);
-        }else{
-            return response()->json(['status'=>'error','message'=>'error occurred in create label. please try again']);
+        if ($label) {
+            return response()->json(['status' => 'success', 'message' => 'label created Sucessfully', 'data' => $label]);
+        } else {
+            return response()->json(['status' => 'error', 'message' => 'error occurred in create label. please try again']);
         }
     }
-
 }

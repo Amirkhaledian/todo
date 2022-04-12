@@ -25,16 +25,11 @@ Route::post('/login',[UserController::class,'login']);
 Route::middleware('auth:api')->group(function () {
     Route::post('/create-task',[TaskController::class,'create'])->name('task.create');
     Route::put('/edit-task/{task}',[TaskController::class,'update'])->name('task.update');
-    Route::get('/status-task/{task}',[TaskController::class,'status'])->name('task.status');
+    Route::put('/status-task/{task}',[TaskController::class,'status'])->name('task.status');
     Route::get('/all-task',[TaskController::class,'index'])->name('task.all');
     Route::get('/specify-task/{id}',[TaskController::class,'show'])->name('task.show');
 
-    Route::post('/create-label/{task}',[LabelController::class,'create']);
-    Route::get('/all-label',[LabelController::class,'index']);
+    Route::post('/create-label/{task}',[LabelController::class,'create'])->name('label.create');
+    Route::get('/all-label',[LabelController::class,'index'])->name('label.all');
 });
 
-// Route::middleware('JwtAuthorization')->group(function(){
-//     Route::get('/test',function(){
-//         return 'access';
-//     });
-// });

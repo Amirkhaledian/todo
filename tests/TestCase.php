@@ -10,12 +10,12 @@ abstract class TestCase extends BaseTestCase
     use CreatesApplication;
     public function loginUser()
     {
-        ($user=factory(User::class)->create());
-
-
+        $user=User::inRandomOrder()->first();
+        if(!$user){
+            $user=factory(User::class)->create();
+        }
 
         $this->actingAs($user, 'api');
-
         return $user;
     }
 }
