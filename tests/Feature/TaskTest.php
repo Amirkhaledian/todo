@@ -39,7 +39,7 @@ class TaskTest extends TestCase
     public function create_task()
     {
         $user = $this->loginUser();
-        $data = factory(Task::class)->make(['user_id' => $user['id']])->toArray();
+        ($data = factory(Task::class)->make(['user_id' => $user['id']])->toArray());
         $this->postJson(route('task.create'), $data)->assertStatus(200);
     }
     /**
