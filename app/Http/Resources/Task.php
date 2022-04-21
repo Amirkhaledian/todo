@@ -19,7 +19,8 @@ class Task extends JsonResource
             'id' => $this->id,
             'title' => $this->title,
             'description' => $this->description,
-            'labels' => $this->labels->toArray(),
+            //'labels' => $this->labels->toArray(),
+            'labels' => Label::collection($this->labels),
         ];
     }
 }
