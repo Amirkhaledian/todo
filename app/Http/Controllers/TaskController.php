@@ -19,7 +19,9 @@ class TaskController extends Controller
 
     public function index()
     {
-        $tasks = Task::has('labels')->with('labels')->get();
+
+        ($tasks = Task::where('user_id', auth()->user()->id)->has('labels')->with('labels')->get());
+
         return ResourcesTask::collection($tasks);
     }
 
