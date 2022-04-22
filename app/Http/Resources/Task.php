@@ -19,6 +19,10 @@ class Task extends JsonResource
             'id' => $this->id,
             'title' => $this->title,
             'description' => $this->description,
+<<<<<<< HEAD
+=======
+            //'labels' => $this->labels->toArray(),
+>>>>>>> d08678e8a96dd825cdfaf17379d6d30508649bb0
             'labels' => Label::collection($this->labels),
         ];
     }
