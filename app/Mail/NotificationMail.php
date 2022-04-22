@@ -14,6 +14,7 @@ class NotificationMail extends Mailable
     public $id;
     public $status;
     public $dateTime;
+
     /**
      * Create a new message instance.
      *
@@ -26,14 +27,16 @@ class NotificationMail extends Mailable
         $this->dateTime = $dateTime;
     }
 
+
     /**
      * Build the message.
      *
      * @return $this
      */
+
     public function build()
     {
         return $this->subject('close status')
-            ->view('mail.notification');
+                    ->view('mail.notification');
     }
 }
