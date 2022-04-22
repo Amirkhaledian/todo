@@ -77,7 +77,7 @@ class TaskTest extends TestCase
         ]), $data)->assertOk();
     }
     /** @test */
-    public function a_user_can_read_all_the_tasks_without_login()
+    public function a_user_cannot_read_all_the_tasks_without_login()
     {
         $task = factory(Task::class)->create();
         $this->getJson(route('task.all'))->assertStatus(401);
