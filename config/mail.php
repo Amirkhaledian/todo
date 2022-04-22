@@ -32,15 +32,16 @@ return [
     |            "postmark", "log", "array"
     |
     */
-
+//دقیقا همان تنظیماتی که در فایل env است
+// را اینجا هم منتقل میکنیم.
     'mailers' => [
         'smtp' => [
             'transport' => 'smtp',
-            'host' => 'smtp.mailtrap.io',
-            'port' => '465',
-            'encryption' => env('MAIL_ENCRYPTION', 'tls'),
-            'username' => 'e35937f9fba4dc',
-            'password' => '04052740426936',
+            'host' => 'smtp.googlemail.com',//اینو تغییر دادم
+            'port' => '465',//همچنین این رو
+            'encryption' => env('MAIL_ENCRYPTION', 'ssl'),//آرگومان دوم رو از tls  به ssl  تغییر دادم
+            'username' => 'monadi.mahdiyeh@gmail.com',//ایمیل  رو وارد کردم
+            'password' => 'passwordemail',// پسورد ایمیل
             'timeout' => null,
             'auth_mode' => null,
         ],
@@ -84,8 +85,9 @@ return [
     */
 
     'from' => [
-        'address' => env('MAIL_FROM_ADDRESS', 'hello@example.com'),
-        'name' => env('MAIL_FROM_NAME', 'Example'),
+        //آرگومان دوم این متد هم که خیلی مهمه باز ایمیل در واقع همون ایمیل فرستنده است
+        'address' => env('MAIL_FROM_ADDRESS', 'monadi.mahdiyeh@gmail.com'),
+        'name' => env('MAIL_FROM_NAME', 'Mahdiyeh'),
     ],
 
 
